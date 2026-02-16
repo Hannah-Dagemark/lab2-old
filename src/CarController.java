@@ -30,6 +30,7 @@ public class CarController {
         CarController cc = new CarController();
 
         cc.cars.add(new Volvo240());
+        cc.cars.add(new Saab95());
 
         // Start a new view and send a reference of self
         cc.frame = new CarView("CarSim 1.0", cc);
@@ -47,6 +48,14 @@ public class CarController {
                 car.move();
                 int x = (int) Math.round(car.getPosition().getX());
                 int y = (int) Math.round(car.getPosition().getY());
+                int[] dimensions = frame.drawPanel.getDimensions();
+                int[] imageDimensions = frame.drawPanel.getImageDimensions();
+                // Trust me this is deffo the #bestwaytodoit. When it hits a wall, it just swings the car around to face the other direction!
+                if (x < 0 || x + imageDimensions[0] >= dimensions[0] || y < 0 || y + imageDimensions[1] >= dimensions[1]) {
+                    Rotation initialRotation = car.getRotation();
+                    car.setRotation(new Rotation(initialRotation.getRotation() + Math.PI));
+                    car.move();
+                }
                 frame.drawPanel.moveit(x, y);
                 // repaint() calls the paintComponent method of the panel
                 frame.drawPanel.repaint();
@@ -60,6 +69,14 @@ public class CarController {
             for (Car car : cars
                 ) {
             car.gas(gas);
+        }
+    }
+
+    void brake(int amount) {
+        double brake = ((double) amount) / 100;
+        for (Car car : cars
+        ) {
+            car.brake(brake);
         }
     }
 }

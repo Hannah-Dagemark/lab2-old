@@ -3,6 +3,10 @@
   <component name="AdditionalModuleElements">
     <content url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1" dumb="true">
       <sourceFolder url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1/src/interfaces" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1/src/utils" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1/test" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../TDA553-DIT954-Grupp43-lab1/testapp" isTestSource="false" />
     </content>
   </component>
 </module>

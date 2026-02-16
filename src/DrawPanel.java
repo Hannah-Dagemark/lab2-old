@@ -16,6 +16,8 @@ public class DrawPanel extends JPanel{
     BufferedImage volvoWorkshopImage;
     Point volvoWorkshopPoint = new Point(300,300);
 
+    private final int[] dimensions;
+
     // TODO: Make this general for all cars
     void moveit(int x, int y){
         volvoPoint.x = x;
@@ -26,6 +28,7 @@ public class DrawPanel extends JPanel{
     public DrawPanel(int x, int y) {
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(x, y));
+        this.dimensions = new int[] {x,y};
         this.setBackground(Color.green);
         // Print an error message in case file is not found with a try/catch block
         try {
@@ -51,5 +54,16 @@ public class DrawPanel extends JPanel{
         super.paintComponent(g);
         g.drawImage(volvoImage, volvoPoint.x, volvoPoint.y, null); // see javadoc for more info on the parameters
         g.drawImage(volvoWorkshopImage, volvoWorkshopPoint.x, volvoWorkshopPoint.y, null);
+
+        // REQUIRED for stuff to work with Linux or really anything non-windows that doesn't handhold with frame updates :]
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    public int[] getImageDimensions() {
+        return new int[] {volvoImage.getWidth(), volvoImage.getHeight()};
+    }
+
+    public int[] getDimensions() {
+        return dimensions;
     }
 }
