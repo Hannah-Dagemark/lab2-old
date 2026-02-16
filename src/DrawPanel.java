@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
@@ -8,59 +10,73 @@ import javax.swing.*;
 
 public class DrawPanel extends JPanel{
 
-    // Just a single image, TODO: Generalize
-    BufferedImage volvoImage;
-    // To keep track of a single car's position
-    Point volvoPoint = new Point();
+    Map<Car, BufferedImage> CarImages = new HashMap<>();
+    Map<Car, Point> CarPoints = new HashMap<>();
 
     BufferedImage volvoWorkshopImage;
     Point volvoWorkshopPoint = new Point(300,300);
 
     private final int[] dimensions;
 
-    // TODO: Make this general for all cars
-    void moveit(int x, int y){
-        volvoPoint.x = x;
-        volvoPoint.y = y;
+    void moveit(Car car, int x, int y){
+        if (CarPoints.containsKey(car)){
+            CarPoints.put(car, new Point(x,y));
+        }
     }
 
     // Initializes the panel and reads the images
-    public DrawPanel(int x, int y) {
+    public DrawPanel(int x, int y, Car[] cars) {
         this.setDoubleBuffered(true);
         this.setPreferredSize(new Dimension(x, y));
         this.dimensions = new int[] {x,y};
         this.setBackground(Color.green);
         // Print an error message in case file is not found with a try/catch block
-        try {
-            // You can remove the "pics" part if running outside of IntelliJ and
-            // everything is in the same main folder.
-            // volvoImage = ImageIO.read(new File("Volvo240.jpg"));
+        for (Car car : cars) {
+            CarPoints.put(car, new Point(0,0));
+            try {
+                System.out.println("Attempting to find image:" + "pics/" + car.getModelName() + ".jpg");
+                CarImages.put(car, ImageIO.read(DrawPanel.class.getResourceAsStream("pics/" + car.getModelName() + ".jpg")));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
 
-            // Rememember to rightclick src New -> Package -> name: pics -> MOVE *.jpg to pics.
-            // if you are starting in IntelliJ.
-            volvoImage = ImageIO.read(DrawPanel.class.getResourceAsStream("pics/Volvo240.jpg"));
+        try {
             volvoWorkshopImage = ImageIO.read(DrawPanel.class.getResourceAsStream("pics/VolvoBrand.jpg"));
-        } catch (IOException ex)
-        {
+        } catch (IOException ex) {
             ex.printStackTrace();
         }
 
     }
 
     // This method is called each time the panel updates/refreshes/repaints itself
-    // TODO: Change to suit your needs.
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.drawImage(volvoImage, volvoPoint.x, volvoPoint.y, null); // see javadoc for more info on the parameters
+        for (Map.Entry<Car, BufferedImage> carImage : CarImages.entrySet()) {
+            Car key = carImage.getKey();
+            BufferedImage value = carImage.getValue();
+            if (CarPoints.containsKey(key)) {
+                g.drawImage(value, CarPoints.get(key).x, CarPoints.get(key).y, null);
+            } else {
+                System.out.println("Couldn't find point for entry :" + carImage + " in :" + CarPoints.keySet());
+            }
+        }
+
         g.drawImage(volvoWorkshopImage, volvoWorkshopPoint.x, volvoWorkshopPoint.y, null);
 
-        // REQUIRED for stuff to work with Linux or really anything non-windows that doesn't handhold with frame updates :]
+        // REQUIRED for stuff to work with Linux or really anything non-windows that doesn't have automatic frame update pipeline flushing :]
         Toolkit.getDefaultToolkit().sync();
     }
 
-    public int[] getImageDimensions() {
-        return new int[] {volvoImage.getWidth(), volvoImage.getHeight()};
+    public int[] getImageDimensions(Car car) {
+        if (CarImages.containsKey(car)) {
+            BufferedImage carImage = CarImages.get(car);
+            return new int[] {carImage.getWidth(), carImage.getHeight()};
+        } else {
+            System.out.println("\u001B[31m WARN: Couldn't get dimensions for image: " + car + " key not found in Car Images! Defaulting to safety [1,1]");
+            return new int[] {1,1};
+        }
     }
 
     public int[] getDimensions() {
