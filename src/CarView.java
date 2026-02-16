@@ -33,6 +33,7 @@ public class CarView extends JFrame{
 
     JButton startButton = new JButton("Start all cars");
     JButton stopButton = new JButton("Stop all cars");
+    JButton switchButton = new JButton("Switch car lanes");
 
     // Constructor
     public CarView(String framename, CarController cc){
@@ -80,7 +81,7 @@ public class CarView extends JFrame{
 
 
         startButton.setBackground(Color.blue);
-        startButton.setForeground(Color.green);
+        startButton.setForeground(Color.black);
         startButton.setPreferredSize(new Dimension(X/5-15,200));
         this.add(startButton);
 
@@ -89,6 +90,11 @@ public class CarView extends JFrame{
         stopButton.setForeground(Color.black);
         stopButton.setPreferredSize(new Dimension(X/5-15,200));
         this.add(stopButton);
+
+        switchButton.setBackground(Color.orange);
+        switchButton.setForeground(Color.black);
+        switchButton.setPreferredSize(new Dimension(X/5-15,200));
+        this.add(switchButton);
 
         gasButton.addActionListener(_ -> carC.gas(gasAmount));
 
@@ -105,6 +111,8 @@ public class CarView extends JFrame{
         startButton.addActionListener(_ -> carC.startCars());
 
         stopButton.addActionListener(_ -> carC.stopCars());
+
+        switchButton.addActionListener(_ -> carC.switchLanes());
 
         // Make the frame pack all it's components by respecting the sizes if possible.
         this.pack();
