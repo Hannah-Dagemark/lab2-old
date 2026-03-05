@@ -34,21 +34,13 @@ class CarController {
             cars.remove(markedCar);
         }
         for (Car car : cars) {
-            BufferedImage carImage = car.getImage();
-            int[] carDimensions = new int[]{carImage.getWidth(), carImage.getHeight()};
-            int[] carPosition = new int []{(int) Math.round(car.getPosition().getX()), (int) Math.round(car.getPosition().getY())};
-
             car.move();
 
             // Handle car hit detection (Workshops and Screen Borders)
             borderDetection(car);
 
             for (Workshop workshop : workshops) {
-                BufferedImage workshopImage = workshop.getImage();
-                int[] workshopDimensions = new int[]{workshopImage.getWidth(), workshopImage.getHeight()};
-                int[] workshopPosition = new int []{(int) Math.round(workshop.getPosition().getX()), (int) Math.round(workshop.getPosition().getY())};
-
-                boolean hasHit = workshopDetection(carPosition, carDimensions, workshopPosition, workshopDimensions);
+                boolean hasHit = workshop.detection(car);
                 if (!hasHit) {
                     continue;
                 }
@@ -86,18 +78,6 @@ class CarController {
         if (carPos.getX() < 0 || carPos.getX() + carImage.getWidth() >= simualtionDimension.getWidth() || carPos.getY() < 0 || carPos.getY() + carImage.getHeight() >=  simualtionDimension.getHeight()) {
             flipCar(car);
         }
-    }
-
-    boolean workshopDetection(int[] carPos, int[] carDim, int[] workPos, int[] workDim) {
-        // Calculating if the car and workshop overlap on the x-axis. Separating the axis-es for code cleanliness :]
-        if (carPos[0] + carDim[0] > workPos[0] && carPos[0] < workPos[0] + workDim[0] ) {
-            // Calculating if the car and workshop overlap on the y-axis
-            if (carPos[1] + carDim[1] > workPos[1] && carPos[1] < workPos[1] + workDim[1]) {
-                return true;
-            }
-            return false;
-        }
-        return false;
     }
 
     void switchLanes() {
