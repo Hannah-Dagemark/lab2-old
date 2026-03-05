@@ -71,6 +71,14 @@ class CarController {
         return state;
     }
 
+    ArrayList<String>  getCarModels() {
+        ArrayList<String> carModels = new ArrayList<>();
+        for (Car car : cars) {
+            carModels.add(car.getModelName());
+        }
+        return carModels;
+    }
+
     void borderDetection(Car car) {
         Position carPos = car.getPosition();
         BufferedImage carImage = car.getImage();
@@ -153,5 +161,36 @@ class CarController {
                 System.out.println("Lowering flat bed, state: " + ((Scania) car).getFlatBedAngle());
             }
         }
+    }
+
+    void addCar(Car car) {
+        if (!cars.isEmpty()) {
+            double offset = cars.getLast().getPosition().getY() + cars.getLast().getImage().getHeight() + 10;
+            System.out.println("Adding car " + car.getModelName() + " at offset " + offset);
+            car.setPosition(new Position(0, offset));
+            cars.add(car);
+        } else {
+            cars.add(car);
+        }
+    }
+
+    void addCar(String carModel) {
+        if (cars.size() < 10) {
+            switch(carModel) {
+                case "Volvo240":
+                    addCar(new Volvo240());
+                    break;
+                case "Saab95":
+                    addCar(new Saab95());
+                    break;
+                case "Scania":
+                    addCar(new Scania());
+                    break;
+            }
+        }
+    }
+
+    void removeCar() {
+        carsMarkedForRemoval.add(cars.getLast());
     }
 }
