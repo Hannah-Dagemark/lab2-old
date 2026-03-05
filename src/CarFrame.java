@@ -2,13 +2,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class CarFrame extends JFrame {
-    private Dimension dimension;
-    private PanelManager panelManager;
+    private final PanelManager panelManager;
 
-    public CarFrame(String framename, Dimension dimension, CarController cc) {
-        this.dimension = dimension;
+    public CarFrame(String frameName, Dimension dimension, CarController cc) {
         panelManager = new PanelManager(dimension, cc);
-        this.setTitle(framename);
+        this.setTitle(frameName);
         this.setPreferredSize(dimension);
         this.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         JComponent[] components = panelManager.getPanels();

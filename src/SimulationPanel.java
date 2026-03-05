@@ -6,33 +6,14 @@ import java.io.IOException;
 import java.util.Map;
 
 public class SimulationPanel extends JPanel {
-
-    private Dimension dimensions;
-    private CarController cc;
+    private final CarController carController;
     private SimulationState currentState;
 
-    public SimulationPanel(Dimension dimension, CarController cc) {
-        this.cc = cc;
+    public SimulationPanel(Dimension dimension, CarController carController) {
+        this.carController = carController;
         this.setDoubleBuffered(true);
         this.setPreferredSize(dimension);
-        this.dimensions = dimension;
         this.setBackground(Color.green);
-        // Print an error message in case file is not found with a try/catch block
-        /*for (Car car : cars) {
-            CarPoints.put(car, new Point(0,0));
-            try {
-                System.out.println("Attempting to find image:" + "pics/" + car.getModelName() + ".jpg");
-                CarImages.put(car, ImageIO.read(DrawPanel.class.getResourceAsStream("pics/" + car.getModelName() + ".jpg")));
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }*/
-
-        /*try {
-            volvoWorkshopImage = ImageIO.read(DrawPanel.class.getResourceAsStream("pics/VolvoBrand.jpg"));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }*/
     }
 
     // Sets everything in place and fits everything
@@ -57,7 +38,7 @@ public class SimulationPanel extends JPanel {
     }
 
     public void updateSimInterface() {
-        SimulationState state = cc.getSimulationState();
+        SimulationState state = carController.getSimulationState();
         currentState = state;
         this.repaint();
     }

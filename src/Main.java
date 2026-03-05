@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 import java.io.Console;
 
 public class Main {
-    private static final int X = 800;
+    private static final int X = 1200;
     private static final int Y = 800;
 
     // The delay (ms) corresponds to 20 updates a sec (hz)

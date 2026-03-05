@@ -20,7 +20,7 @@ class CarController {
 
     //methods:
 
-    CarController(Dimension simualtionDimension) {
+    public CarController(Dimension simualtionDimension) {
         this.simualtionDimension = simualtionDimension;
     }
 
@@ -35,6 +35,7 @@ class CarController {
         }
         for (Car car : cars) {
             BufferedImage carImage = car.getImage();
+            int[] carDimensions = new int[]{carImage.getWidth(), carImage.getHeight()};
             int[] carPosition = new int []{(int) Math.round(car.getPosition().getX()), (int) Math.round(car.getPosition().getY())};
 
             car.move();
@@ -43,7 +44,11 @@ class CarController {
             borderDetection(car);
 
             for (Workshop workshop : workshops) {
-                boolean hasHit = workshop.detection(car);
+                BufferedImage workshopImage = workshop.getImage();
+                int[] workshopDimensions = new int[]{workshopImage.getWidth(), workshopImage.getHeight()};
+                int[] workshopPosition = new int []{(int) Math.round(workshop.getPosition().getX()), (int) Math.round(workshop.getPosition().getY())};
+
+                boolean hasHit = workshopDetection(carPosition, carDimensions, workshopPosition, workshopDimensions);
                 if (!hasHit) {
                     continue;
                 }
@@ -53,8 +58,7 @@ class CarController {
                     System.out.println("Failed to load car " + car + " Into workshop " + this);
                     flipCar(car);
                 } else {
-                    // System.out.println("Loaded car " + car);
-                    //carsMarkedForRemoval.add(car);
+                    carsMarkedForRemoval.add(car);
                     Position offset = new Position(workshop.getPosition().getX() + 20, workshop.getPosition().getY());
                     car.setPosition(offset);
                     car.stopEngine();
@@ -84,26 +88,17 @@ class CarController {
         }
     }
 
-    /*void workshopDetection(Car car, int[] carPos, int[] carDim) {
-        int[] workPos = new int[] {frame.drawPanel.volvoWorkshopPoint.x, frame.drawPanel.volvoWorkshopPoint.y};
-        int[] workDim = new int[] {frame.drawPanel.volvoWorkshopImage.getWidth(), frame.drawPanel.volvoWorkshopImage.getHeight()};
-
+    boolean workshopDetection(int[] carPos, int[] carDim, int[] workPos, int[] workDim) {
         // Calculating if the car and workshop overlap on the x-axis. Separating the axis-es for code cleanliness :]
         if (carPos[0] + carDim[0] > workPos[0] && carPos[0] < workPos[0] + workDim[0] ) {
             // Calculating if the car and workshop overlap on the y-axis
             if (carPos[1] + carDim[1] > workPos[1] && carPos[1] < workPos[1] + workDim[1]) {
-                boolean loaded = workshops.getFirst().load(car);
-                if (!loaded) {
-                    System.out.println("Failed to load car " + car + " Into workshop " + workshops.getFirst());
-                    flipCar(car);
-                } else {
-                    System.out.println("Loaded car " + car);
-                    carsMarkedForRemoval.add(car);
-                    frame.drawPanel.moveit(car, workPos[0]+20, workPos[1]);
-                }
+                return true;
             }
+            return false;
         }
-    }*/
+        return false;
+    }
 
     void switchLanes() {
         Position newPosition = cars.getLast().getPosition();
