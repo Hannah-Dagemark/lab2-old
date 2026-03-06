@@ -20,6 +20,15 @@ public class Main {
     static void main(String[] args) {
         Dimension dimension = new Dimension(X, Y);
         cc = new CarController(dimension);
+
+        // Add the cars and set their starting positions below each other by 100 units (compensated for image height of the previous car)
+        cc.addCar(new Volvo240());
+        cc.addCar(new Saab95());
+        cc.addCar(new Scania());
+
+        cc.workshops.add(new VolvoWorkshop(new Position(300, 300), new Rotation(0)));
+        cc.workshops.getFirst().openDoors();
+
         frame = new CarFrame("CarSim 2.0", dimension, cc);
 
         timer = new Timer(delay, _ -> {
@@ -28,15 +37,5 @@ public class Main {
         });
         timer.setRepeats(true);
         timer.start();
-
-        // Add the cars and set their starting positions below each other by 100 units (compensated for image height of the previous car)
-        cc.cars.add(new Volvo240());
-        cc.cars.add(new Saab95());
-        cc.cars.getLast().setPosition(new Position(0,160));
-        cc.cars.add(new Scania());
-        cc.cars.getLast().setPosition(new Position(0,320));
-
-        cc.workshops.add(new VolvoWorkshop(new Position(300, 300), new Rotation(0)));
-        cc.workshops.getFirst().openDoors();
     }
 }
