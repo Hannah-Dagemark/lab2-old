@@ -1,16 +1,16 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.Map;
 
 public class SimulationPanel extends JPanel {
     private final CarController carController;
-    private SimulationState currentState;
+    private final GraphicsController graphicsController;
+    private Map<Positionable, BufferedImage> currentState;
 
-    public SimulationPanel(Dimension dimension, CarController carController) {
+    public SimulationPanel(Dimension dimension, CarController carController, GraphicsController graphicsController) {
         this.carController = carController;
+        this.graphicsController = graphicsController;
         this.setDoubleBuffered(true);
         this.setPreferredSize(dimension);
         this.setBackground(Color.green);
@@ -27,7 +27,7 @@ public class SimulationPanel extends JPanel {
         if (currentState == null) {
             return;
         }
-        for (Map.Entry<Positionable, BufferedImage> modelImage : currentState.getState().entrySet()) {
+        for (Map.Entry<Positionable, BufferedImage> modelImage : currentState.entrySet()) {
             Positionable position = modelImage.getKey();
             BufferedImage image = modelImage.getValue();
             g.drawImage(image, (int)position.getPosition().getX(), (int)position.getPosition().getY(), null);
@@ -38,8 +38,7 @@ public class SimulationPanel extends JPanel {
     }
 
     public void updateSimInterface() {
-        SimulationState state = carController.getSimulationState();
-        currentState = state;
+        currentState = graphicsController.getPositionableImages();
         this.repaint();
     }
 

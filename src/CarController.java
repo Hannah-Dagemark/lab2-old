@@ -1,6 +1,8 @@
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * This class represents the Controller part in the MVC pattern.
@@ -60,13 +62,13 @@ class CarController {
         }
     }
 
-    SimulationState getSimulationState() {
-        SimulationState state = new SimulationState();
+    Map<Positionable, BufferedImage> getSimulationState() {
+        Map<Positionable, BufferedImage> state = new HashMap<>();
         for (Car car : cars) {
-            state.importNewModel(car, car.getImage());
+            state.put(car, car.getImage());
         }
         for (Workshop workshop : workshops) {
-            state.importNewModel(workshop, workshop.getImage());
+            state.put(workshop, workshop.getImage());
         }
         return state;
     }
@@ -95,6 +97,8 @@ class CarController {
             car.setPosition(new Position(positionStorage.getX(), newPosition.getY()));
             newPosition = positionStorage;
         }
+        cars.addLast(cars.getFirst());
+        cars.removeFirst();
     }
 
     private void flipCar(Car car) {
