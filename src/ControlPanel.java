@@ -1,5 +1,10 @@
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.util.List;
 
 public class ControlPanel extends JPanel implements updateComposite {
     private final Dimension dimension;
@@ -40,9 +45,11 @@ public class ControlPanel extends JPanel implements updateComposite {
         JPanel carSelectPanel = new JPanel();
         JPanel buttonPanel = new JPanel(new GridLayout(2,3));
 
-        SpinnerModel carSelectSpinnerModel = new SpinnerListModel(carController.getCarModels());
+        List<String> carModels = carController.getCarModels();
+        SpinnerModel carSelectSpinnerModel = new SpinnerListModel(carModels);
         JSpinner carSpinner = new JSpinner(carSelectSpinnerModel);
         carSpinner.addChangeListener(e -> selectedModel = (String) ((JSpinner)e.getSource()).getValue());
+        selectedModel = carModels.getFirst();
 
         carSelectPanel.setPreferredSize(new Dimension((int)dimension.getWidth()/10, 50));
         carSelectPanel.setLayout(new BorderLayout());
