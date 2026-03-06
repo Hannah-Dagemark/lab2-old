@@ -125,9 +125,4 @@ public class ControlPanel extends JPanel implements updateComposite {
 
         removeButton.addActionListener(_ -> carController.removeCar());
     }
-
-    @Override
-    public void updateSimUI() {
-
-    }
 }

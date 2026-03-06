@@ -1,41 +1,47 @@
 import java.awt.*;
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.Console;
 
 public class Main {
     private static final int X = 1200;
     private static final int Y = 800;
 
-    // The delay (ms) corresponds to 20 updates a sec (hz)
-    private static final int delay = 50;
+    // The delay (ms) corresponds to 50 updates a sec (hz)
+    private static final int delay = 20;
 
-    // The timer is started with a anonymous listener (see below) that executes the UI tick
+    // The timer is started with an anonymous listener (see below) that executes the UI tick
     // each step between delays
     static Timer timer;
-    static CarController cc;
-    static CarFrame frame;
+    static CarController carController;
+    static GraphicsController graphicsController;
+    static JFrame frame;
 
-    static void main(String[] args) {
+    static void main() {
         Dimension dimension = new Dimension(X, Y);
-        cc = new CarController(dimension);
+        carController = new CarController(dimension);
 
         WorkshopFactory workshopFactory = new WorkshopFactory();
-
-        // Add the cars and set their starting positions below each other by 100 units (compensated for image height of the previous car)
 
         Workshop staticTestWorkshop = (Workshop) workshopFactory.createPositionable(workshopFactory.availableTypes()[0]);
         staticTestWorkshop.openDoors();
         staticTestWorkshop.setPosition(new Position(300,300));
+        carController.addWorkshop(staticTestWorkshop);
 
-        cc.workshops.add(staticTestWorkshop);
+        frame = new JFrame("CarSim 2.0");
+        frame.setPreferredSize(dimension);
+        frame.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
 
-        frame = new CarFrame("CarSim 2.0", dimension, cc);
+        graphicsController = new GraphicsController(dimension, carController);
+
+        for (JComponent panel : graphicsController.getPanels()) {
+            frame.add(panel);
+        }
+        frame.pack();
+        frame.setVisible(true);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         timer = new Timer(delay, _ -> {
-            cc.updateSimUI();
-            frame.updateSimUI();
+            carController.updateSimUI();
+            graphicsController.updateSimUI();
         });
         timer.setRepeats(true);
         timer.start();

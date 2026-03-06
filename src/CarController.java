@@ -4,24 +4,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.lang.String;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /*
 * This class represents the Controller part in the MVC pattern.
-* It's responsibilities is to listen to the View and responds in a appropriate manner by
+* Its responsibilities are to listen to the View and responds in an appropriate manner by
 * modifying the model state and the updating the view.
  */
 
-class CarController implements updateComposite {
+public class CarController implements updateComposite {
     // member fields:
 
     // A list of cars, modify if needed
-    Dimension simualtionDimension;
+    private final Dimension simualtionDimension;
 
-    ArrayList<Car> cars = new ArrayList<>();
-    ArrayList<Workshop> workshops = new ArrayList<>();
-    ArrayList<Car> carsMarkedForRemoval = new ArrayList<>();
+    private final ArrayList<Car> cars = new ArrayList<>();
+    private final ArrayList<Workshop> workshops = new ArrayList<>();
+    private final ArrayList<Car> carsMarkedForRemoval = new ArrayList<>();
 
-    CarFactory carFactory = new CarFactory();
+    private final CarFactory carFactory = new CarFactory();
 
     //methods:
 
@@ -52,7 +54,7 @@ class CarController implements updateComposite {
                 }
 
                 boolean loaded = workshop.load(car);
-                if (!workshop.findItemInLoad(car) && !workshop.load(car)) {
+                if (!workshop.findItemInLoad(car) && !loaded) {
                     System.out.println("Failed to load car " + car + " Into workshop " + this);
                     flipCar(car);
                 } else {
@@ -66,13 +68,13 @@ class CarController implements updateComposite {
         }
     }
 
-    SimulationState getSimulationState() {
-        SimulationState state = new SimulationState();
+    Map<Positionable, BufferedImage> getSimulationState() {
+        Map<Positionable, BufferedImage> state = new HashMap<>();
         for (Car car : cars) {
-            state.importNewModel(car, car.getImage());
+            state.put(car, car.getImage());
         }
         for (Workshop workshop : workshops) {
-            state.importNewModel(workshop, workshop.getImage());
+            state.put(workshop, workshop.getImage());
         }
         return state;
     }
@@ -97,6 +99,8 @@ class CarController implements updateComposite {
             car.setPosition(new Position(positionStorage.getX(), newPosition.getY()));
             newPosition = positionStorage;
         }
+        cars.addLast(cars.getFirst());
+        cars.removeFirst();
     }
 
     private void flipCar(Car car) {
@@ -168,12 +172,15 @@ class CarController implements updateComposite {
     void addCar(Car car) {
         if (!cars.isEmpty()) {
             double offset = cars.getLast().getPosition().getY() + cars.getLast().getImage().getHeight() + 10;
-            System.out.println("Adding car " + car.getModelName() + " at offset " + offset);
             car.setPosition(new Position(0, offset));
             cars.add(car);
         } else {
             cars.add(car);
         }
+    }
+
+    void addWorkshop(Workshop workshop) {
+        workshops.add(workshop);
     }
 
     void addCar(String carModel) {
