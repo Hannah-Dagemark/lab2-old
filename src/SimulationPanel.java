@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
 
-public class SimulationPanel extends JPanel {
+public class SimulationPanel extends JPanel implements updateComposite {
     private final CarController carController;
     private SimulationState currentState;
 
@@ -37,10 +37,10 @@ public class SimulationPanel extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
-    public void updateSimInterface() {
+    @Override
+    public void updateSimUI() {
         SimulationState state = carController.getSimulationState();
         currentState = state;
         this.repaint();
     }
-
 }

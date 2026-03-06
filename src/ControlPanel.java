@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JPanel implements updateComposite {
     private final Dimension dimension;
     private final CarController carController;
     private int gasAmount = 0;
@@ -124,5 +124,10 @@ public class ControlPanel extends JPanel {
         addButton.addActionListener(_ -> carController.addCar(selectedModel));
 
         removeButton.addActionListener(_ -> carController.removeCar());
+    }
+
+    @Override
+    public void updateSimUI() {
+
     }
 }

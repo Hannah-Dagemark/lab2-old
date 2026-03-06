@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class CarFrame extends JFrame {
+public class CarFrame extends JFrame implements updateComposite {
     private final PanelManager panelManager;
 
     public CarFrame(String frameName, Dimension dimension, CarController cc) {
@@ -25,7 +25,8 @@ public class CarFrame extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
-    public void updateFrame() {
-        panelManager.updatePanels();
+    @Override
+    public void updateSimUI() {
+        panelManager.updateSimUI();
     }
 }
