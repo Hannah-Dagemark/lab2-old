@@ -34,8 +34,8 @@ public class Main {
         frame = new CarFrame("CarSim 2.0", dimension, cc);
 
         timer = new Timer(delay, _ -> {
-            cc.simulationTick();
-            frame.updateFrame();
+            cc.updateSimUI();
+            frame.updateSimUI();
         });
         timer.setRepeats(true);
         timer.start();

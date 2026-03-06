@@ -11,7 +11,7 @@ import java.util.List;
 * modifying the model state and the updating the view.
  */
 
-class CarController {
+class CarController implements updateComposite {
     // member fields:
 
     // A list of cars, modify if needed
@@ -32,7 +32,8 @@ class CarController {
     /* Each step the TimerListener moves all the cars in the list and tells the
     * view to update its images. Change this method to your needs.
     * */
-    void simulationTick() {
+    @Override
+    public void updateSimUI() {
         if (!carsMarkedForRemoval.isEmpty()) {
             Car markedCar = carsMarkedForRemoval.getFirst();
             carsMarkedForRemoval.removeFirst();
