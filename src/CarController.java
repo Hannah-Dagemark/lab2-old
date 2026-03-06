@@ -1,6 +1,9 @@
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.lang.String;
+import java.util.List;
 
 /*
 * This class represents the Controller part in the MVC pattern.
@@ -17,6 +20,8 @@ class CarController {
     ArrayList<Car> cars = new ArrayList<>();
     ArrayList<Workshop> workshops = new ArrayList<>();
     ArrayList<Car> carsMarkedForRemoval = new ArrayList<>();
+
+    CarFactory carFactory = new CarFactory();
 
     //methods:
 
@@ -71,12 +76,8 @@ class CarController {
         return state;
     }
 
-    ArrayList<String>  getCarModels() {
-        ArrayList<String> carModels = new ArrayList<>();
-        for (Car car : cars) {
-            carModels.add(car.getModelName());
-        }
-        return carModels;
+    List<String> getCarModels() {
+        return Arrays.asList(carFactory.availableTypes());
     }
 
     void borderDetection(Car car) {
@@ -135,11 +136,11 @@ class CarController {
 
     void turbo(boolean state) {
         for (Car car : cars) {
-            if (car instanceof Saab95) {
+            if (car instanceof TurboCar) {
                 if (state) {
-                    ((Saab95) car).setTurboOn();
+                    ((TurboCar) car).setTurboOn();
                 } else {
-                    ((Saab95) car).setTurboOff();
+                    ((TurboCar) car).setTurboOff();
                 }
             }
         }
@@ -147,8 +148,8 @@ class CarController {
 
     void liftBed() {
         for (Car car : cars) {
-            if (car instanceof Scania) {
-                ((Scania) car).dumpFlatBed();
+            if (car instanceof FlatbedCar) {
+                ((FlatbedCar) car).dumpFlatBed();
                 System.out.println("Dumping flat bed, state: " + ((Scania) car).getFlatBedAngle());
             }
         }
@@ -156,8 +157,8 @@ class CarController {
 
     void lowerBed() {
         for (Car car : cars) {
-            if (car instanceof Scania) {
-                ((Scania) car).levelFlatBed();
+            if (car instanceof FlatbedCar) {
+                ((FlatbedCar) car).levelFlatBed();
                 System.out.println("Lowering flat bed, state: " + ((Scania) car).getFlatBedAngle());
             }
         }
@@ -176,17 +177,7 @@ class CarController {
 
     void addCar(String carModel) {
         if (cars.size() < 10) {
-            switch(carModel) {
-                case "Volvo240":
-                    addCar(new Volvo240());
-                    break;
-                case "Saab95":
-                    addCar(new Saab95());
-                    break;
-                case "Scania":
-                    addCar(new Scania());
-                    break;
-            }
+            addCar((Car) carFactory.createPositionable(carModel));
         }
     }
 

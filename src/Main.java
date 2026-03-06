@@ -21,13 +21,15 @@ public class Main {
         Dimension dimension = new Dimension(X, Y);
         cc = new CarController(dimension);
 
-        // Add the cars and set their starting positions below each other by 100 units (compensated for image height of the previous car)
-        cc.addCar(new Volvo240());
-        cc.addCar(new Saab95());
-        cc.addCar(new Scania());
+        WorkshopFactory workshopFactory = new WorkshopFactory();
 
-        cc.workshops.add(new VolvoWorkshop(new Position(300, 300), new Rotation(0)));
-        cc.workshops.getFirst().openDoors();
+        // Add the cars and set their starting positions below each other by 100 units (compensated for image height of the previous car)
+
+        Workshop staticTestWorkshop = (Workshop) workshopFactory.createPositionable(workshopFactory.availableTypes()[0]);
+        staticTestWorkshop.openDoors();
+        staticTestWorkshop.setPosition(new Position(300,300));
+
+        cc.workshops.add(staticTestWorkshop);
 
         frame = new CarFrame("CarSim 2.0", dimension, cc);
 
