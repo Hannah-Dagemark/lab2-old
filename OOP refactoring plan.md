@@ -6,7 +6,7 @@
 * CarFrame  
 * SimulationPanel  
 * ControlPanel  
-* PanelManager
+* GraphicsController
 
 ## Nya Interfaces
 
@@ -31,10 +31,10 @@ CarController hanterar interfaces inom bil systemet som specificerar vilka egens
 
 ## CarView
 
-CarView har bytts ut med klasserna CarFrame och PanelManager, istället för att hantera alla knappar på en JFrame så har ansvaret skickats till ControlPanel. Nu hanterar CarFrame ansvaret för JFrame som ska visas till användaren och PanelManager samling och synkning av panelerna.
+CarView har bytts ut med klasserna CarFrame och GraphicsController, istället för att hantera alla knappar på en JFrame så har ansvaret skickats till ControlPanel. Nu hanterar CarFrame ansvaret för JFrame som ska visas till användaren och GraphicsController samling och synkning av panelerna.
 
 ## DrawPanel
 
 DrawPanel har delats upp i klasserna SimulationPanel och ControlPanel. SimulationPanel visar bilden som simuleras och uppdaterar den när det görs ändringar. ControlPanel visar kontrollerna och skickar vidare instruktioner till CarController.
 
-SimulationPanel och ControlPanel har ingen kommunikationskanal förutom genom CarController. För framtiden så hanteras nya paneler av PanelManager som kommer hantera det översiktliga ansvaret för klassen bland andra paneler.
+SimulationPanel och ControlPanel har ingen kommunikationskanal förutom genom CarController. För framtiden så hanteras nya paneler av GraphicsController som kommer hantera det översiktliga ansvaret för klassen bland andra paneler.
