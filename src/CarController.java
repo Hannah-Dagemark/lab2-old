@@ -1,24 +1,29 @@
-import java.awt.*;
+import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.lang.String;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
 /*
 * This class represents the Controller part in the MVC pattern.
-* It's responsibilities is to listen to the View and responds in a appropriate manner by
+* Its responsibilities are to listen to the View and responds in an appropriate manner by
 * modifying the model state and the updating the view.
  */
 
-class CarController {
+public class CarController implements updateComposite {
     // member fields:
 
     // A list of cars, modify if needed
-    Dimension simualtionDimension;
+    private final Dimension simualtionDimension;
 
-    ArrayList<Car> cars = new ArrayList<>();
-    ArrayList<Workshop> workshops = new ArrayList<>();
-    ArrayList<Car> carsMarkedForRemoval = new ArrayList<>();
+    private final ArrayList<Car> cars = new ArrayList<>();
+    private final ArrayList<Workshop> workshops = new ArrayList<>();
+    private final ArrayList<Car> carsMarkedForRemoval = new ArrayList<>();
+
+    private final CarFactory carFactory = new CarFactory();
 
     //methods:
 
@@ -29,7 +34,8 @@ class CarController {
     /* Each step the TimerListener moves all the cars in the list and tells the
     * view to update its images. Change this method to your needs.
     * */
-    void simulationTick() {
+    @Override
+    public void updateSimUI() {
         if (!carsMarkedForRemoval.isEmpty()) {
             Car markedCar = carsMarkedForRemoval.getFirst();
             carsMarkedForRemoval.removeFirst();
@@ -48,7 +54,7 @@ class CarController {
                 }
 
                 boolean loaded = workshop.load(car);
-                if (!workshop.findItemInLoad(car) && !workshop.load(car)) {
+                if (!workshop.findItemInLoad(car) && !loaded) {
                     System.out.println("Failed to load car " + car + " Into workshop " + this);
                     flipCar(car);
                 } else {
@@ -73,12 +79,8 @@ class CarController {
         return state;
     }
 
-    ArrayList<String>  getCarModels() {
-        ArrayList<String> carModels = new ArrayList<>();
-        for (Car car : cars) {
-            carModels.add(car.getModelName());
-        }
-        return carModels;
+    List<String> getCarModels() {
+        return Arrays.asList(carFactory.availableTypes());
     }
 
     void borderDetection(Car car) {
@@ -139,11 +141,11 @@ class CarController {
 
     void turbo(boolean state) {
         for (Car car : cars) {
-            if (car instanceof Saab95) {
+            if (car instanceof TurboCar) {
                 if (state) {
-                    ((Saab95) car).setTurboOn();
+                    ((TurboCar) car).setTurboOn();
                 } else {
-                    ((Saab95) car).setTurboOff();
+                    ((TurboCar) car).setTurboOff();
                 }
             }
         }
@@ -151,8 +153,8 @@ class CarController {
 
     void liftBed() {
         for (Car car : cars) {
-            if (car instanceof Scania) {
-                ((Scania) car).dumpFlatBed();
+            if (car instanceof FlatbedCar) {
+                ((FlatbedCar) car).dumpFlatBed();
                 System.out.println("Dumping flat bed, state: " + ((Scania) car).getFlatBedAngle());
             }
         }
@@ -160,8 +162,8 @@ class CarController {
 
     void lowerBed() {
         for (Car car : cars) {
-            if (car instanceof Scania) {
-                ((Scania) car).levelFlatBed();
+            if (car instanceof FlatbedCar) {
+                ((FlatbedCar) car).levelFlatBed();
                 System.out.println("Lowering flat bed, state: " + ((Scania) car).getFlatBedAngle());
             }
         }
@@ -170,7 +172,6 @@ class CarController {
     void addCar(Car car) {
         if (!cars.isEmpty()) {
             double offset = cars.getLast().getPosition().getY() + cars.getLast().getImage().getHeight() + 10;
-            System.out.println("Adding car " + car.getModelName() + " at offset " + offset);
             car.setPosition(new Position(0, offset));
             cars.add(car);
         } else {
@@ -178,19 +179,13 @@ class CarController {
         }
     }
 
+    void addWorkshop(Workshop workshop) {
+        workshops.add(workshop);
+    }
+
     void addCar(String carModel) {
         if (cars.size() < 10) {
-            switch(carModel) {
-                case "Volvo240":
-                    addCar(new Volvo240());
-                    break;
-                case "Saab95":
-                    addCar(new Saab95());
-                    break;
-                case "Scania":
-                    addCar(new Scania());
-                    break;
-            }
+            addCar((Car) carFactory.createPositionable(carModel));
         }
     }
 

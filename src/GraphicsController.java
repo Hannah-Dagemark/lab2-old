@@ -5,14 +5,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GraphicsController {
+public class GraphicsController implements updateComposite {
     private final ArrayList<JComponent> panels = new ArrayList<>();
     private final SimulationPanel simulationPanel;
     private final CarController carController;
-    private Map<Positionable, BufferedImage> modelsImages = new HashMap<>();;
+    private Map<Positionable, BufferedImage> modelsImages = new HashMap<>();
 
     public GraphicsController(Dimension dimension, CarController carController) {
-        simulationPanel = new SimulationPanel(new Dimension(dimension.width, dimension.height-240), carController, this);
+        simulationPanel = new SimulationPanel(new Dimension(dimension.width, dimension.height-240), this);
         ControlPanel controlPanel = new ControlPanel(new Dimension(dimension.width, 240), carController);
         this.carController = carController;
         panels.add(simulationPanel);
@@ -26,8 +26,8 @@ public class GraphicsController {
         return modelsImages;
     }
 
-    public void graphicsTick() {
-        simulationPanel.updateSimInterface();
+    public void updateSimUI() {
+        simulationPanel.updateSimUI();
     }
 
     public JComponent[] getPanels() {

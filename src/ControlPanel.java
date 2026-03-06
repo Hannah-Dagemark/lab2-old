@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class ControlPanel extends JPanel {
+public class ControlPanel extends JPanel implements updateComposite {
     private final Dimension dimension;
     private final CarController carController;
     private int gasAmount = 0;

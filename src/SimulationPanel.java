@@ -3,22 +3,15 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 
-public class SimulationPanel extends JPanel {
-    private final CarController carController;
+public class SimulationPanel extends JPanel implements updateComposite {
     private final GraphicsController graphicsController;
     private Map<Positionable, BufferedImage> currentState;
 
-    public SimulationPanel(Dimension dimension, CarController carController, GraphicsController graphicsController) {
-        this.carController = carController;
+    public SimulationPanel(Dimension dimension, GraphicsController graphicsController) {
         this.graphicsController = graphicsController;
         this.setDoubleBuffered(true);
         this.setPreferredSize(dimension);
         this.setBackground(Color.green);
-    }
-
-    // Sets everything in place and fits everything
-    private void initComponents(String title) {
-        // TODO
     }
 
     @Override
@@ -37,9 +30,9 @@ public class SimulationPanel extends JPanel {
         Toolkit.getDefaultToolkit().sync();
     }
 
-    public void updateSimInterface() {
+    @Override
+    public void updateSimUI() {
         currentState = graphicsController.getPositionableImages();
         this.repaint();
     }
-
 }
